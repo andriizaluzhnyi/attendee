@@ -39,7 +39,7 @@ ADMINS = []
 
 SERVER_EMAIL = "noreply@mail.attendee.dev"
 
-CSRF_TRUSTED_ORIGINS = ["https://*.attendee.dev"]
+CSRF_TRUSTED_ORIGINS = ["https://*.attendee.dev", "http://*.compute-1.amazonaws.com"]
 
 # Log more stuff in staging
 LOGGING = {

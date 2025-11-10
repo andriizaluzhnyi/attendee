@@ -5,12 +5,15 @@ services:
      - .:/attendee
     networks:
       - attendee_network
+    env_file:
+      - .env
     environment:
       - POSTGRES_HOST=postgres
       - REDIS_URL=redis://redis:6379/5
       - DJANGO_SETTINGS_MODULE=attendee.settings.development
       - ENABLE_CHROME_SANDBOX=true
     command: "celery -A attendee worker -l INFO"
+    restart: unless-stopped
     security_opt:
       - seccomp=./bots/web_bot_adapter/chrome_seccomp.json
 
@@ -20,11 +23,14 @@ services:
      - .:/attendee
     networks:
       - attendee_network
+    env_file:
+      - .env
     environment:
       - POSTGRES_HOST=postgres
       - REDIS_URL=redis://redis:6379/5
       - DJANGO_SETTINGS_MODULE=attendee.settings.development
     command: "python manage.py run_scheduler"
+    restart: unless-stopped
     entrypoint: []
 
   attendee-app-local:
@@ -35,11 +41,14 @@ services:
       - attendee_network
     ports:
       - "8000:8000"
+    env_file:
+      - .env
     environment:
       - POSTGRES_HOST=postgres
       - REDIS_URL=redis://redis:6379/5
       - DJANGO_SETTINGS_MODULE=attendee.settings.development
     command: python manage.py runserver 0.0.0.0:8000
+    restart: unless-stopped
     entrypoint: []
 
   attendee-webpage-streamer-local:
@@ -50,10 +59,13 @@ services:
       - attendee_network
     ports:
       - "8001:8000"
+    env_file:
+      - .env
     environment:
       - DJANGO_SETTINGS_MODULE=attendee.settings.development
       - ENABLE_CHROME_SANDBOX=true
     command: "python bots/webpage_streamer/run_webpage_streamer.py"
+    restart: unless-stopped
     security_opt:
       - seccomp=./bots/web_bot_adapter/chrome_seccomp.json
     profiles:
@@ -85,6 +97,7 @@ services:
 networks:
   attendee_network:
     driver: bridge
+    external: true
 
 volumes:
   postgres:

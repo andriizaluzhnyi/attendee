@@ -4,7 +4,12 @@ from .base import *
 
 DEBUG = True
 SITE_DOMAIN = "localhost:8000"
-ALLOWED_HOSTS = ["tendee-stripe-hooks.ngrok.io", "localhost"]
+ALLOWED_HOSTS = ["*.compute-1.amazonaws.com", "localhost"]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://*.compute-1.amazonaws.com",
+    "http://localhost:8000",
+]
 
 DATABASES = {
     "default": {

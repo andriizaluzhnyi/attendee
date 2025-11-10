@@ -57,7 +57,7 @@ AUTHENTICATION_BACKENDS = [
 
 # Django allauth config
 SITE_ID = 1
-if os.getenv("DISABLE_SIGNUP") and os.getenv("DISABLE_SIGNUP") != "false":
+if os.getenv("DISABLE_SIGNUP"):
     ACCOUNT_ADAPTER = "accounts.adapters.NoNewUsersAccountAdapter"
 else:
     ACCOUNT_ADAPTER = "accounts.adapters.StandardAccountAdapter"
@@ -215,6 +215,8 @@ if STORAGE_PROTOCOL == "azure":
     }
     RECORDING_STORAGE_BACKEND = copy.deepcopy(DEFAULT_STORAGE_BACKEND)
     RECORDING_STORAGE_BACKEND["OPTIONS"]["azure_container"] = AZURE_RECORDING_STORAGE_CONTAINER_NAME
+    if os.getenv("RECORDING_STORAGE_LOCATION"):
+        RECORDING_STORAGE_BACKEND["OPTIONS"]["location"] = os.getenv("RECORDING_STORAGE_LOCATION")
 else:
     DEFAULT_STORAGE_BACKEND = {
         "BACKEND": "storages.backends.s3.S3Storage",
@@ -227,6 +229,8 @@ else:
     # Deep copy the DEFAULT_STORAGE_BACKEND
     RECORDING_STORAGE_BACKEND = copy.deepcopy(DEFAULT_STORAGE_BACKEND)
     RECORDING_STORAGE_BACKEND["OPTIONS"]["bucket_name"] = AWS_RECORDING_STORAGE_BUCKET_NAME
+    if os.getenv("RECORDING_STORAGE_LOCATION"):
+        RECORDING_STORAGE_BACKEND["OPTIONS"]["location"] = os.getenv("RECORDING_STORAGE_LOCATION")
 
 
 STORAGES = {
